@@ -5,8 +5,8 @@
     <title>Slava</title>
 </head>
 <body>
-  <input id = "input" type="text" placeholder="рост(м)">
-  <input id = "input2" type="text" placeholder="вес(кг)">  
+  <input id = "height" type="text" placeholder="рост(м)"> 
+  <input id = "weight" type="text" placeholder="вес(кг)">  
   <script>
     function onClick(value, value2)
       {
@@ -15,6 +15,6 @@
           alert(weight/(height*height));
       }
   </script> 
-  <input type = "button" value = "Ввод" onClick = "onClick(input.value, input2.value);">  
+  <input type = "button" value = "Ввод" onClick = "onClick(height.value, weight.value);">  
 </body>
 </html>
