@@ -5,13 +5,14 @@
     <title>Slava</title>
 </head>
 <body>
-  <input id = "input" type="text">
+  <input id = "input" type="text" placeholder="рост(м)">
+  <input id = "input2" type="text" placeholder="вес(кг)">  
   <script>
-    function onClick(value)
+    function onClick(value, value2)
       {
-          alert(value);
+          alert(value2/(value*value));
       }
   </script> 
-  <input type = "button" value = "Ввод" onClick = "onClick(input.value);">  
+  <input type = "button" value = "Ввод" onClick = "onClick(input.value, input2.value);">  
 </body>
 </html>
