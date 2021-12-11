@@ -1,1 +1,20 @@
-
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Slava</title>
+</head>
+<body>
+  <input id = "height" type="text" placeholder="рост(см)"> 
+  <input id = "weight" type="text" placeholder="вес(кг)">  
+  <script>
+    function onClick(value, value2)
+      {
+          var height = Number(value)
+          var weight = Number(value2)
+          alert(weight/(height*height/10000));
+      }
+  </script> 
+  <input type = "button" value = "Ввод" onClick = "onClick(height.value, weight.value);">  
+</body>
+</html>
