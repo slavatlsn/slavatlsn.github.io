@@ -10,8 +10,8 @@
   <script>
     function onClick(value, value2)
       {
-          var height = parseFloat(parseFloat(value.replace(",", ".")))
-          var weight = parseFloat(parseFloat(value2.replace(",", ".")))
+          var height = Number(value)
+          var weight = Number(value2)
           alert(weight/(height*height/10000));
       }
   </script> 
