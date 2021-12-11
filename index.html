@@ -5,12 +5,12 @@
     <title>Slava</title>
 </head>
 <body>
-  <input type="text">
+  <input id = "input" type="text">
   <h1></h1>
   <script>
     function onClick()
       {
-          let input = document.querySelector('input');
+          var input = document.getElementsByTagName("input")[0];
           alert(input.text);
       }
   </script> 
