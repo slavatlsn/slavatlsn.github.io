@@ -10,7 +10,9 @@
   <script>
     function onClick(value, value2)
       {
-          alert(value2/(value*value));
+          var height = Number(value)
+          var weight = Number(value2)
+          alert(weight/(height*height));
       }
   </script> 
   <input type = "button" value = "Ввод" onClick = "onClick(input.value, input2.value);">  
