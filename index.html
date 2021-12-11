@@ -5,15 +5,13 @@
     <title>Slava</title>
 </head>
 <body>
-  <input id = "input" type="text">
-  <h1></h1>
+  <input id = "input" type="text"/ onchange = "onClick(this.value)">
   <script>
-    function onClick()
+    function onClick(value)
       {
-          var input = document.getElementsByTagName("input")[0];
-          alert("Hi!");
+          alert(value);
       }
   </script> 
-  <input type = "button" value = "Ввод" onClick = "onClick();">  
+  <input type = "button" value = "Ввод" onClick = "onClick(input.value);">  
 </body>
 </html>
