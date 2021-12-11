@@ -5,14 +5,14 @@
     <title>Slava</title>
 </head>
 <body>
-  <input id = "height" type="text" placeholder="рост(м)"> 
+  <input id = "height" type="text" placeholder="рост(см)"> 
   <input id = "weight" type="text" placeholder="вес(кг)">  
   <script>
     function onClick(value, value2)
       {
           var height = parseFloat(parseFloat(value.replace(",", ".")))
           var weight = parseFloat(parseFloat(value2.replace(",", ".")))
-          alert(weight/(height*height));
+          alert(weight/(height*height/10000));
       }
   </script> 
   <input type = "button" value = "Ввод" onClick = "onClick(height.value, weight.value);">  
