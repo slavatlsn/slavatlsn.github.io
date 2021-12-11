@@ -5,16 +5,15 @@
     <title>Slava</title>
 </head>
 <body>
-  <form> 
-   <p><input list="number"></p>
-   <datalist id="number">
-    <option>1</option>
-    <option>2</option>
-    <option>3</option>
-    <option>4</option>
-    <option>5</option>
-    <option>6</option>
-   </datalist> 
-  </form> 
+  <input type="text">
+  <h1></h1>
+  <script>
+    function onClick()
+      {
+          let input = document.querySelector('input');
+          h1.textContent = input.value;
+      }
+  </script> 
+  <input type = "button" value = "Ввод" onClick = "onClick();">  
 </body>
 </html>
