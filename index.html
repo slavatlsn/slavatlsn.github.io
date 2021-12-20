@@ -3,61 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Slava</title>
-    <style>
-        .signin {
-            color: #F1DCC9;
-            font: 100;
-            margin-bottom: 5px;
-            margin-top: 15px;
-            margin-left: 45px;
-            margin-right: 45px;
-        }
-        .inpute {
-            color: #F1DCC9;
-            background: #42313A;
-            border-radius: 5px;
-            border: 3px solid #F1DCC9;
-            margin-bottom: 5px;
-            margin-top: 5px;
-            margin-left: 45px;
-            margin-right: 45px;
-
-        }
-        .inputp {
-            color: #F1DCC9;
-            background: #42313A;
-            border-radius: 5px;
-            border: 3px solid #F1DCC9;
-            margin-bottom: 5px;
-            margin-top: 0;
-            margin-left: 45px;
-            margin-right: 45px;
-        }
-        .button {
-            color: #F1DCC9;
-            background: #42313A;
-            border-radius: 5px;
-            border: 3px solid #F1DCC9;
-            margin-bottom: 2px;
-            margin-top: 0;
-            margin-left: 45px;
-            margin-right: 45px;
-        }
-
-    </style>
 </head>
-<body style="background-color: #42313A">
+<body>
     <script>
-        button()
+        function click()
         {
-            alert("Вы успешно вошли");
+            alert('Hi')
         }
     </script>
-    <h1 text-align="center" class="signin">Sign in</h1>
-    <input type="email" id="email" class="inpute" autocomplete="off" />
-    <br>
-    <input type="password" id="password" class="inputp" autocomplete="off" />
-    <br>
-    <button class="button" onclick="button">Enter</button>
+    <input id="input" type="text"/>
+    <button onclick="click">Enter</button>
 </body>
-</html>   
+</html> 
