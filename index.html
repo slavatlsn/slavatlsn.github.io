@@ -3,15 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <title>Slava</title>
-</head>
-<body>
-    <script>
-        function click()
-        {
-            alert('Hi')
+    <style>
+        .signin {
+            color: #F1DCC9;
+            font: 100;
+            margin-bottom: 5px;
+            margin-top: 15px;
+            margin-left: 45px;
+            margin-right: 45px;
         }
-    </script>
-    <input id="input" type="text"/>
-    <button onclick="click">Enter</button>
+
+        .inpute {
+            color: #F1DCC9;
+            background: #42313A;
+            border-radius: 5px;
+            border: 3px solid #F1DCC9;
+            margin-bottom: 5px;
+            margin-top: 5px;
+            margin-left: 45px;
+            margin-right: 45px;
+        }
+
+        .inputp {
+            color: #F1DCC9;
+            background: #42313A;
+            border-radius: 5px;
+            border: 3px solid #F1DCC9;
+            margin-bottom: 5px;
+            margin-top: 0;
+            margin-left: 45px;
+            margin-right: 45px;
+        }
+
+        .button {
+            color: #F1DCC9;
+            background: #42313A;
+            border-radius: 5px;
+            border: 3px solid #F1DCC9;
+            margin-bottom: 2px;
+            margin-top: 0;
+            margin-left: 45px;
+            margin-right: 45px;
+        }
+    </style>
+</head>
+<body style="background-color: #42313A">
+    <h1 text-align="center" class="signin">Sign in</h1>
+    <input type="email" id="email" class="inpute" autocomplete="off" />
+    <br>
+    <input type="password" id="password" class="inputp" autocomplete="off" />
+    <br>
+    <button class="button" onclick="if ((email.value == 'slava') && (password.value == 'pass')) window.location.href='test.html';">Enter</button>
 </body>
-</html> 
+</html>    
