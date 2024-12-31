@@ -29,7 +29,13 @@
 
     function process() {
         let b = document.getElementById('btn');
-        if(b.value == "НАЧАТЬ") {b.value = "СНОВА";}
+        let l1 = document.getElementById('new_year');
+        let l2 = document.getElementById('common');
+        if(b.value == "НАЧАТЬ") {
+            b.value = "СНОВА";
+            l1.style.visibility = "visible";
+            l2.style.visibility = "visible";
+        }
         poles();
     }
     </script>
@@ -39,6 +45,10 @@
         }
 
         .again {
+            position: fixed;
+            margin-left: 45%;
+            margin-right: 45%;
+            width: 10%;
             background-color: #0B0C10;
             border: #66FCF1 2px solid;
             color: #66FCF1;
@@ -46,11 +56,20 @@
         }
 
         div {
-            p{
-                border: #66FCF1 2px solid;
-                padding 10px;
-            }
+            vertical-align: middle;
+            margin-left: 40%;
+            margin-right: 40%;
+        }
+
+        .lst {
+                margin: 0;
+                padding: 4px;
+                visibility: hidden;
+                vertical-align: middle;
+
             li {
+                margin: 10px;
+                width: 20%;
                 list-style-type: none;
                 color: #66FCF1;
             }
@@ -60,19 +79,19 @@
 </head>
 <body>
     <div>
-        <ul id="common">
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
+        <ul id="common" class="lst">
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+            <li>5</li>
+            <li>6</li>
         </ul>
     </div>
     <div>
-        <ul id="new_year">
-            <li></li>
-            <li></li>
+        <ul id="new_year" class="lst">
+            <li>1</li>
+            <li>2</li>
         </ul>
     </div>
     <input id="btn" type="button" class="again" onclick="process()" value="НАЧАТЬ">
