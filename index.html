@@ -2,115 +2,79 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Slinder</title>
+    <title>NYGames</title>
+    <script>
+    function rand(max) {
+        return Math.floor(Math.random()*max);
+    }
+
+    function poles() {
+        let comm = ["пингвин", "шашлык", "иглу", "платформа", "чеширский", "бубенец", "шлем", "облакоеда", "апельсиновый", "колесо", "бульбашка", "калейдоскоп", "неоновый", "мандаринка", "потапыч", "шмель", "пирожное", "дискотека", "таракан", "фламинго", "зонтик", "каракатица", "сверчок", "горошек", "пятюня", "парашют", "гусеница", "фейерверк", "панды", "скворечник", "кинотеатр", "абират", "разноцветный", "рюкзак", "термос", "зубная", "транспорт", "декорация", "разнообразие", "лампочка", "шарик", "цветочек", "квадрат", "снегопад", "грива", "аппаратура", "шум", "бокал", "кран", "изобилие", "мохнатик", "фрактал", "блокчейн", "крошка", "лунатики", "дождевой", "желейка", "корабль", "брошюра", "транзистор", "гаджет", "елочка", "крипто", "попугай", "туннель", "немая", "шалость", "планета", "зверь", "кремль", "факел", "сапожник", "смешное", "футболка", "оптимизм", "куклы", "сны", "приключение", "джунгли", "праздник", "листовка", "будильник"];
+        let ny = ["ёлка", "снег", "подарки", "Дед Мороз", "Снегурочка", "Новый Год", "свечи", "украшения", "гирлянда", "праздник", "шампанское", "салют", "фейерверк", "зима", "праздничный", "стол", "угощения", "колокольчик", "игрушки", "музыка", "настроение", "костюм", "счастье", "радость", "тепло", "надежда", "сказка", "хрустящий", "удача", "веселье"];
+        let l1 = document.getElementById('new_year');
+        l1.querySelectorAll('li').forEach(
+            function(li) {
+                var r = rand(ny.length);
+                li.textContent = ny[r];
+                ny.splice(r, 1);
+        });
+        l1 = document.getElementById('common')
+        l1.querySelectorAll('li').forEach(
+            function(li) {
+                var r = rand(comm.length);
+                li.textContent = comm[r];
+                comm.splice(r, 1);
+        });
+    }
+
+    function process() {
+        let b = document.getElementById('btn');
+        if(b.value == "НАЧАТЬ") {b.value = "СНОВА";}
+        poles();
+    }
+    </script>
+    <style>
+        body {
+            background-color: #0B0C10;
+        }
+
+        .again {
+            background-color: #0B0C10;
+            border: #66FCF1 2px solid;
+            color: #66FCF1;
+            text-align: center;
+        }
+
+        div {
+            p{
+                border: #66FCF1 2px solid;
+                padding 10px;
+            }
+            li {
+                list-style-type: none;
+                color: #66FCF1;
+            }
+        }
+
+    </style>
 </head>
-
-<style>
-    .header
-    {
-      position: absolute;
-      top: 0;
-      left: 0;
-      background-color: #000000;
-      width: 100%;
-      height: 75px;
-    }
-
-    .main
-    {
-      background-color: #FFFFFF;
-      position: absolute;
-      top: 75px;
-      left: 0;
-      width: 100%;
-      height: calc(100% - 150px);
-    }
-
-    .footer
-    {
-      position: absolute;
-      top: calc(100% - 75px);
-      left: 0;
-      background-color: #000000;
-      width: 100%;
-      height: 75px;
-    }
-</style>
-
-<style>
-    .text
-    {
-      position: absolute;
-      left: 15px;
-      top: 4px;
-      height: 25px;
-      font-size: 20px;
-      width: 80px;
-      text-align: center;
-      color: #FFFFFF;
-      border: #FFFFFF solid 2px;
-      border-radius: 13px;
-    }
-
-    .button_h
-    {
-      position: relative;
-      top: calc(50% - 11px);
-      left: 200px;
-      background-color: #000000;
-      color: #AAAAFF;
-      font-size: 15px;
-      margin-right: 20px;
-    }
-
-    .button_h_
-    {
-      position: relative;
-      top: calc(50% - 11px);
-      left: 200px;
-      background-color: #000000;
-      color: #FFFFFF;
-      font-size: 15px;
-      margin-right: 20px;
-    }
-
-    .desc
-    {
-      position: absolute;
-      left: calc(50% - 150px);
-      text-align: center;
-      font: arial;
-      font-size: 20px;
-      width: 300px;
-    }
-
-    .text_
-    {
-      height: 25px;
-      font-size: 20px;
-      width: 180p;
-      text-align: center;
-      color: #FFFFFF;
-    }
-</style>
-
 <body>
-   <div class="header">
-       <p class="text">Slinder</p>
-       <button class="button_h">Главная</button>
-       <button class="button_h_" >Знакомиться</button>
-   </div>
-
-   <div class="main">
-        <p class="desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In efficitur molestie tellus, et blandit est scelerisque ac. Donec iaculis, lorem sed efficitur vehicula, sem risus ullamcorper dolor, et lacinia urna tellus a nisi. Mauris ex est, aliquet eu arcu a, tincidunt cursus turpis. Nam hendrerit sapien id commodo semper. Ut ac odio fringilla, consequat mauris ut, scelerisque turpis. Cras elit elit, fermentum eget varius a, commodo ac urna. Aenean aliquet vehicula tortor, et suscipit ex faucibus et. Aliquam at eros aliquet, dictum mi non, mattis sapien. Proin in libero et nulla hendrerit convallis sed sit amet felis. Aenean a consectetur est.
-
-Nam ultrices euismod lorem, at pellentesque felis bibendum sed.</p>
-   </div>
-
-   <div class="footer">
-       <p class="text_">Связаться с нами: +0(000)000-00-00</p>
-   </div>
-
+    <div>
+        <ul id="common">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+    <div>
+        <ul id="new_year">
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+    <input id="btn" type="button" class="again" onclick="process()" value="НАЧАТЬ">
 </body>
-
 </html>
