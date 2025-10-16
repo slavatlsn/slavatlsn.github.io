@@ -1,0 +1,341 @@
+/* static/css/style.css */
+:root {
+    /* Цвета */
+    --primary-color: #003366;
+    --primary-hover: #004488;
+    --secondary-color: #0055aa;
+    --secondary-hover: #0066cc;
+    --background-color: #f5f5f5;
+    --background-secondary: #fff;
+    --text-primary: #333;
+    --text-secondary: #666;
+    --text-light: #fff;
+    --border-color: #ddd;
+    --border-light: #ccc;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --panel-background: #f0f0f0;
+    
+    /* Размеры */
+    --header-height: 60px;
+    --footer-height: 50px;
+    --sidebar-width: 25%;
+    --button-padding: 8px 14px;
+    --spacing-sm: 10px;
+    --spacing-md: 15px;
+    --spacing-lg: 20px;
+    --radius-default: 4px;
+    --radius-circle: 50%;
+    --transition-speed: 0.2s;
+    --transition-function: ease;
+    
+    /* Шрифты */
+    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --font-size-xs: 0.8rem;
+    --font-size-sm: 0.85rem;
+    --font-size-md: 0.9rem;
+    --font-size-lg: 0.95rem;
+    --font-size-xl: 1.1rem;
+    --font-size-xxl: 1.2rem;
+    --font-size-heading: 1.3rem;
+    --line-height: 1.6;
+    
+    /* Темная тема - значения по умолчанию (светлая) */
+    --bg-primary: var(--background-color);
+    --bg-secondary: var(--background-secondary);
+    --text-primary-dark: var(--text-primary);
+    --text-secondary-dark: var(--text-secondary);
+    --border-primary: var(--border-color);
+    --panel-bg: var(--panel-background);
+}
+
+/* Темная тема */
+body.dark-theme {
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #2d2d2d;
+    --text-primary-dark: #e0e0e0;
+    --text-secondary-dark: #aaaaaa;
+    --border-primary: #404040;
+    --panel-bg: #333333;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--font-family);
+}
+
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary-dark);
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-height: 100vh;
+    line-height: var(--line-height);
+}
+
+header {
+    background-color: var(--primary-color);
+    color: var(--text-light);
+    padding: var(--spacing-md) var(--spacing-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px var(--shadow-color);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.logo img {
+    height: 40px;
+}
+
+.logo h1 {
+    font-size: var(--font-size-xxl);
+    font-weight: 500;
+}
+
+.header-controls {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.btn {
+    background-color: var(--secondary-color);
+    color: var(--text-light);
+    border: none;
+    padding: var(--button-padding);
+    border-radius: var(--radius-default);
+    cursor: pointer;
+    font-size: var(--font-size-md);
+    transition: background-color var(--transition-speed) var(--transition-function);
+}
+
+.btn:hover {
+    background-color: var(--secondary-hover);
+}
+
+.btn-secondary {
+    background-color: var(--panel-bg);
+    color: var(--text-primary-dark);
+}
+
+.btn-secondary:hover {
+    background-color: #d0d0d0;
+}
+
+main {
+    display: grid;
+    grid-template-columns: var(--sidebar-width) 1fr;
+    height: calc(100vh - var(--header-height) - var(--footer-height));
+}
+
+.sidebar {
+    background-color: var(--bg-secondary);
+    border-right: 1px solid var(--border-primary);
+    overflow-y: auto;
+}
+
+.toolbar {
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--border-primary);
+}
+
+.toolbar h2 {
+    margin-bottom: var(--spacing-sm);
+    font-size: var(--font-size-xl);
+    color: var(--primary-color);
+}
+
+.tool-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-sm);
+}
+
+.tool-button {
+    aspect-ratio: 1/1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--panel-bg);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-default);
+    cursor: pointer;
+    transition: all var(--transition-speed) var(--transition-function);
+    font-size: var(--font-size-xs);
+}
+
+.tool-button:hover {
+    background-color: #e0e0e0;
+    transform: translateY(-2px);
+}
+
+.tool-button.active {
+    background-color: var(--secondary-color);
+    color: var(--text-light);
+}
+
+.tool-button i {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+}
+
+.properties {
+    padding: var(--spacing-md);
+}
+
+.properties h2 {
+    margin-bottom: var(--spacing-sm);
+    font-size: var(--font-size-xl);
+    color: var(--primary-color);
+}
+
+.property-group {
+    margin-bottom: 15px;
+}
+
+.property-group h3 {
+    margin-bottom: 8px;
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary-dark);
+}
+
+.property {
+    margin-bottom: var(--spacing-sm);
+}
+
+.property label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: var(--font-size-sm);
+}
+
+.property input, .property select {
+    width: 100%;
+    padding: 6px;
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-default);
+}
+
+.workspace {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.workspace-header {
+    padding: 10px var(--spacing-md);
+    background-color: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-primary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.workspace-title {
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+.simulation-controls {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.canvas-container {
+    flex-grow: 1;
+    position: relative;
+    overflow: hidden;
+    background-color: #fafafa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#petri-net-canvas {
+    border: 1px dashed var(--border-light);
+    background-image: radial-gradient(#e0e0e0 1px, transparent 1px);
+    background-size: 20px 20px;
+    cursor: crosshair;
+}
+
+.canvas-placeholder {
+    text-align: center;
+    padding: 30px;
+    color: var(--text-secondary-dark);
+}
+
+.canvas-placeholder h3 {
+    margin-bottom: 15px;
+    color: var(--primary-color);
+    font-size: var(--font-size-heading);
+}
+
+.canvas-placeholder p {
+    margin-bottom: 10px;
+    font-size: var(--font-size-lg);
+}
+
+.canvas-placeholder-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+footer {
+    background-color: #333;
+    color: var(--text-light);
+    padding: var(--spacing-md) var(--spacing-lg);
+    text-align: center;
+    font-size: var(--font-size-md);
+}
+
+footer a {
+    color: #64b5f6;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+.theme-toggle {
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-circle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    color: var(--text-light);
+    position: relative;
+    overflow: hidden;
+}
+
+.theme-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+}
+
+.theme-toggle::after {
+    content: "☀️";
+    position: absolute;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+body.dark-theme .theme-toggle::after {
+    content: "🌙";
+}
