@@ -1,4 +1,4 @@
-let currentTool = 'position';
+let currentTool = '';
 let network = { 
     positions: {}, // Объект с id в качестве ключей
     transitions: [], // Массив переходов со свойствами input и output
@@ -11,6 +11,8 @@ let isDragging = false;
 let draggedElement = null;
 let arcStartPoint = null;
 let nextArcId = 1; // Счетчик для генерации уникальных ID дуг
+let selectedElement = null;
+let selectedElementType = null;
 
 function disable(e) {
     e.preventDefault();
@@ -36,6 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
         themeToggle.title = 'Темная тема';
     }
 
+    setupPropertyListeners();
+
     // Настройка инструментов
     showProperties(currentTool);
     updateCursor();
@@ -49,6 +53,17 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('reset-btn').addEventListener('click', resetSimulation);
     document.getElementById('step-btn').addEventListener('click', stepSimulation);
     document.getElementById('play-btn').addEventListener('click', toggleSimulation);
+    document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape' || event.key === 'Esc') {
+        currentTool = '';
+        document.querySelectorAll('.tool-button').forEach(b => {
+                b.classList.remove('active');
+                b.setAttribute('aria-pressed', 'false');
+        });
+        updateCursor();
+        showProperties(currentTool);
+    }
+});
 
     // Изменение размера холста
     window.addEventListener('resize', resizeCanvas);
@@ -64,6 +79,53 @@ document.addEventListener('DOMContentLoaded', () => {
     // Инициализация холста
     initCanvas();
 });
+
+function setupPropertyListeners() {
+    document.getElementById('token-count').addEventListener('change', () => {
+        if (selectedElementType === 'position' && selectedElement) {
+            network.positions[selectedElement.id].tokens = parseInt(document.getElementById('token-count').value) || 0;
+            render();
+        }
+    });
+
+    document.getElementById('position-type').addEventListener('change', () => {
+        if (selectedElementType === 'position' && selectedElement) {
+            network.positions[selectedElement.id].type = document.getElementById('position-type').value;
+            render();
+        }
+    });
+
+    document.getElementById('guard-condition').addEventListener('change', () => {
+        if (selectedElementType === 'transition' && selectedElement) {
+            network.transitions[selectedElement.id].guard = document.getElementById('guard-condition').value;
+            render();
+        }
+    });
+
+    document.getElementById('transition-delay').addEventListener('change', () => {
+        if (selectedElementType === 'transition' && selectedElement) {
+            network.transitions[selectedElement.id].delay = parseFloat(document.getElementById('transition-delay').value) || 0;
+            render();
+        }
+    });
+
+    document.getElementById('arc-weight').addEventListener('change', () => {
+        if (selectedElementType === 'arc' && selectedElement) {
+            network.arcs[selectedElement.id].weight = parseInt(document.getElementById('arc-weight').value) || 1;
+            render();
+        }
+    });
+
+    document.getElementById('arc-type').addEventListener('change', () => {
+        if (selectedElementType === 'arc' && selectedElement) {
+            network.arcs[selectedElement.id].isInhibitor = document.getElementById('arc-type').value === 'red';
+            render();
+        }
+    });
+}
+
+// Вызовите один раз при старте
+setupPropertyListeners();
 
 function setupTools() {
     document.querySelectorAll('.tool-button').forEach(button => {
@@ -131,15 +193,16 @@ function findElementAtPosition(x, y) {
         const dx = x - pos.x;
         const dy = y - pos.y;
         if (dx * dx + dy * dy <= 20 * 20) {
-            return { type: 'position', element: pos };
+            return { type: 'position', element: pos, id: posId };
         }
     }
 
     // Поиск переходов
-    for (let tr of network.transitions) {
+    for (let i = 0; i < network.transitions.length; i++) {
+        let tr = network.transitions[i];
         if (x >= tr.x - 5 && x <= tr.x + 5 &&
             y >= tr.y - 15 && y <= tr.y + 15) {
-            return { type: 'transition', element: tr };
+            return { type: 'transition', element: tr, id: i };
         }
     }
 
@@ -155,6 +218,7 @@ function findElementAtPosition(x, y) {
                     return { 
                         type: 'arc', 
                         element: arc,
+                        id: arcId,
                         from: position,
                         to: toElement
                     };
@@ -172,6 +236,7 @@ function findElementAtPosition(x, y) {
                     return { 
                         type: 'arc', 
                         element: arc,
+                        id: arcId,
                         from: fromElement,
                         to: position
                     };
@@ -183,9 +248,7 @@ function findElementAtPosition(x, y) {
     return null;
 }
 
-/**
- * Проверяет, находится ли точка (x,y) близко к линии между двумя точками
- */
+
 function findArcAtPosition(x, y, from, to) {
     const TOLERANCE = 10; // Допустимое расстояние от линии в пикселях
     
@@ -226,9 +289,7 @@ function findArcAtPosition(x, y, from, to) {
     return distance <= TOLERANCE;
 }
 
-/**
- * Вычисляет расстояние от точки до линии
- */
+
 function distanceFromPointToLine(px, py, x1, y1, x2, y2) {
     // Векторы
     const A = px - x1;
@@ -319,7 +380,8 @@ function handleMouseDown(e) {
                 x,
                 y,
                 name,
-                tokens: parseInt(document.getElementById("token-count").value) || 0
+                tokens: parseInt(document.getElementById("token-count").value) || 0,
+                type: document.getElementById("position-type").value
             };
             render();
         } else if (currentTool === 'transition') {
@@ -336,6 +398,26 @@ function handleMouseDown(e) {
                 delay: parseInt(document.getElementById("transition-delay").value) || 0
             });
             render();
+        } else {
+            const element = findElementAtPosition(x, y);
+            if (element) {
+                selectedElement = element;
+                selectedElementType = element.type;
+                showProperties(element.type);
+                if (element.type === 'position') {
+                    document.getElementById("position-name").value = element.element.name;
+                    document.getElementById("token-count").value = element.element.tokens;
+                    document.getElementById("position-type").value = element.element.type;
+                } else if (element.type === 'transition') {
+                    document.getElementById("guard-condition").value = element.element.guard;
+                    document.getElementById("transition-delay").value = element.element.delay;
+                    document.getElementById("transition-name").value = element.element.name;
+                } else if (element.type === 'arc') {
+                    document.getElementById('arc-weight').value = element.element.weight;
+                    document.getElementById('arc-type').value = element.element.isInhibitor ? "red" : "default";
+                }
+                render();
+            }
         }
     }
 }
