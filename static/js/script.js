@@ -4,6 +4,7 @@ let network = {
     transitions: [], // Массив переходов со свойствами input и output
     arcs: {} // Словарь дуг: ключ - id дуги, значение - объект дуги
 };
+let network_backup = {};
 let canvas = null;
 let ctx = null;
 let isDragging = false;
@@ -695,7 +696,7 @@ function drawPosition(pos) {
     ctx.arc(pos.x, pos.y, 20, 0, Math.PI * 2);
     ctx.fillStyle = '#fff';
     ctx.fill();
-    ctx.strokeStyle = document.body.classList.contains('dark-theme') ? '#666' : '#000';
+    ctx.strokeStyle = document.body.classList.contains('dark-theme') ? '#667' : '#000';
     ctx.lineWidth = 2;
     ctx.stroke();
     
@@ -711,7 +712,7 @@ function drawPosition(pos) {
         ctx.arc(pos.x, pos.y, 12, 0, Math.PI * 2);
         ctx.fillStyle = '#fff';
         ctx.fill();
-        ctx.fillStyle = document.body.classList.contains('dark-theme') ? '#ddd' : '#000';
+        ctx.fillStyle = '#667';
         ctx.font = 'bold 12px Arial';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
@@ -762,74 +763,70 @@ function saveNetwork() {
 //---------------------------------------------------- Simulator --------------------------------------------------------
 
 function resetSimulation() {
-    // Сбрасываем количество фишек во всех позициях
-    for (const posId in network.positions) {
-        network.positions[posId].tokens = 0;
+    const btn = document.getElementById('play-btn');
+    if(btn.textContent.includes('Пуск'))
+    {
+        for(const posId in network.positions) 
+        {
+            network.positions[posId].tokens = network_backup[posId];
+        }
+        render();
     }
-    render();
 }
 
 function stepSimulation() {
     // Простая реализация шага симуляции
-    const enabledTransitions = network.transitions.filter(transition => {
-        // Проверяем, что все входные позиции имеют достаточное количество фишек
-        return transition.input.every(arcId => {
-            const arc = network.arcs[arcId];
-            const position = network.positions[arc.positionId];
-            // Для обычных дуг проверяем количество фишек
-            // Для ингибиторных дуг проверяем отсутствие фишек
-            return position && (
-                (arc.isInhibitor && position.tokens === 0) ||
-                (!arc.isInhibitor && position.tokens >= arc.weight)
-            );
+    const btn = document.getElementById('play-btn');
+    if(btn.textContent.includes('Пауза'))
+    {
+        const enabledTransitions = network.transitions.filter(transition => {
+            // Проверяем, что все входные позиции имеют достаточное количество фишек
+            return transition.input.every(arcId => {
+                const arc = network.arcs[arcId];
+                const position = network.positions[arc.positionId];
+                // Для обычных дуг проверяем количество фишек
+                // Для ингибиторных дуг проверяем отсутствие фишек
+                return position && (
+                    (arc.isInhibitor && position.tokens === 0) ||
+                    (!arc.isInhibitor && position.tokens >= arc.weight)
+                );
+            });
         });
-    });
     
-    if (enabledTransitions.length > 0) {
-        // Берем первый активный переход
-        const transition = enabledTransitions[0];
+        if (enabledTransitions.length > 0) {
+            // Берем первый активный переход
+            const transition = enabledTransitions[0];
         
-        // Удаляем фишки из входных позиций (только для не-ингибиторных дуг)
-        transition.input.forEach(arcId => {
-            const arc = network.arcs[arcId];
-            const position = network.positions[arc.positionId];
-            if (position && !arc.isInhibitor) {
-                position.tokens -= arc.weight;
-            }
-        });
+            // Удаляем фишки из входных позиций (только для не-ингибиторных дуг)
+            transition.input.forEach(arcId => {
+                const arc = network.arcs[arcId];
+                const position = network.positions[arc.positionId];
+                if (position && !arc.isInhibitor) {
+                    position.tokens -= arc.weight;
+                }
+            });
         
-        // Добавляем фишки в выходные позиции
-        transition.output.forEach(arcId => {
-            const arc = network.arcs[arcId];
-            const position = network.positions[arc.positionId];
-            if (position) {
-                position.tokens += arc.weight;
-            }
-        });
+            // Добавляем фишки в выходные позиции
+            transition.output.forEach(arcId => {
+                const arc = network.arcs[arcId];
+                const position = network.positions[arc.positionId];
+                if (position) {
+                    position.tokens += arc.weight;
+                }
+            });
         
-        render();
+            render();
+        }
     }
 }
 
 function toggleSimulation() {
     const btn = document.getElementById('play-btn');
     if (btn.textContent.includes('Пуск')) {
-        // Сохраняем текущую сеть перед запуском симуляции
-       /* fetch('/save', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(network)
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Успешно отправлено:', data);
-        })
-        .catch(error => {
-            console.error('Ошибка отправки:', error);
-            alert('Не удалось отправить данные на сервер');
-        });*/
+        for (const posId in network.positions) 
+        {
+            network_backup[posId] = network.positions[posId].tokens;
+        }
         btn.textContent = '⏸ Пауза';
     } else {
         btn.textContent = '⏵ Пуск';
