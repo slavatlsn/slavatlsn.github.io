@@ -53,6 +53,23 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('reset-btn').addEventListener('click', resetSimulation);
     document.getElementById('step-btn').addEventListener('click', stepSimulation);
     document.getElementById('play-btn').addEventListener('click', toggleSimulation);
+    // Закрытие по клику вне области
+document.getElementById('examples-modal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeExamplesModal();
+    }
+});
+
+// Закрытие по клавише Escape
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && document.getElementById('examples-modal').style.display === 'flex') {
+        closeExamplesModal();
+    }
+});
+    document.getElementById('load-network-btn').addEventListener('click', () => {
+        document.getElementById('load-network-input').click();
+    });
+    document.getElementById('load-network-input').addEventListener('change', loadNetworkFromFile);
     document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape' || event.key === 'Esc') {
         currentTool = '';
@@ -79,6 +96,156 @@ document.addEventListener('DOMContentLoaded', () => {
     // Инициализация холста
     initCanvas();
 });
+
+function loadExample(exampleId) {
+    let exampleNetwork = null;
+
+    switch (exampleId) {
+        case 'producer-consumer':
+            exampleNetwork = {
+                positions: {
+                    'p1': { id: 'p1', x: 200, y: 150, name: 'Буфер пуст', tokens: 1 },
+                    'p2': { id: 'p2', x: 400, y: 150, name: 'Буфер полон', tokens: 0 }
+                },
+                transitions: [
+                    { id: 't1', x: 300, y: 100, name: 'Производить', input: ['a2'], output: ['a1'], guard: '', delay: 0 },
+                    { id: 't2', x: 300, y: 200, name: 'Потреблять', input: ['a1'], output: ['a2'], guard: '', delay: 0 }
+                ],
+                arcs: {
+                    'a1': { id: 'a1', positionId: 'p2', weight: 1, isInhibitor: false },
+                    'a2': { id: 'a2', positionId: 'p1', weight: 1, isInhibitor: false }
+                }
+            };
+            break;
+
+        case 'fork-join':
+            exampleNetwork = {
+                positions: {
+                    'p1': { id: 'p1', x: 150, y: 200, name: 'P1', tokens: 1 },
+                    'p2': { id: 'p2', x: 300, y: 100, name: 'P2', tokens: 0 },
+                    'p3': { id: 'p3', x: 300, y: 300, name: 'P3', tokens: 0 },
+                    'p4': { id: 'p4', x: 450, y: 200, name: 'P4', tokens: 0 }
+                },
+                transitions: [
+                    { id: 't1', x: 225, y: 200, name: 'Fork', input: ['a1'], output: ['a2', 'a3'], guard: '', delay: 0 },
+                    { id: 't2', x: 375, y: 200, name: 'Join', input: ['a4', 'a5'], output: ['a6'], guard: '', delay: 0 }
+                ],
+                arcs: {
+                    'a1': { id: 'a1', positionId: 'p1', weight: 1, isInhibitor: false },
+                    'a2': { id: 'a2', positionId: 'p2', weight: 1, isInhibitor: false },
+                    'a3': { id: 'a3', positionId: 'p3', weight: 1, isInhibitor: false },
+                    'a4': { id: 'a4', positionId: 'p2', weight: 1, isInhibitor: false },
+                    'a5': { id: 'a5', positionId: 'p3', weight: 1, isInhibitor: false },
+                    'a6': { id: 'a6', positionId: 'p4', weight: 1, isInhibitor: false }
+                }
+            };
+            break;
+
+        case 'inhibitor':
+            exampleNetwork = {
+                positions: {
+                    'p1': { id: 'p1', x: 150, y: 200, name: 'P1', tokens: 1 },
+                    'p2': { id: 'p2', x: 300, y: 200, name: 'P2', tokens: 0 },
+                    'p3': { id: 'p3', x: 450, y: 200, name: 'P3', tokens: 0 }
+                },
+                transitions: [
+                    { id: 't1', x: 225, y: 200, name: 'T1', input: ['a1'], output: ['a2'], guard: '', delay: 0 },
+                    { id: 't2', x: 375, y: 200, name: 'T2', input: ['a3', 'a4'], output: ['a5'], guard: '', delay: 0 }
+                ],
+                arcs: {
+                    'a1': { id: 'a1', positionId: 'p1', weight: 1, isInhibitor: false },
+                    'a2': { id: 'a2', positionId: 'p2', weight: 1, isInhibitor: false },
+                    'a3': { id: 'a3', positionId: 'p1', weight: 1, isInhibitor: false },
+                    'a4': { id: 'a4', positionId: 'p2', weight: 1, isInhibitor: true },
+                    'a5': { id: 'a5', positionId: 'p3', weight: 1, isInhibitor: false }
+                }
+            };
+            break;
+
+        default:
+            return;
+    }
+
+    // Загружаем сеть
+    network = exampleNetwork;
+
+    // Обновляем nextArcId
+    let maxArcId = 1;
+    for (const arcId in network.arcs) {
+        const numId = parseInt(arcId.replace('a', ''));
+        if (!isNaN(numId) && numId >= maxArcId) {
+            maxArcId = numId + 1;
+        }
+    }
+    nextArcId = maxArcId;
+
+    // Сбрасываем выбраный элемент
+    selectedElement = null;
+    selectedElementType = null;
+
+    // Перерисовываем
+    render();
+
+    // Закрываем модальное окно
+    closeExamplesModal();
+}
+
+function loadNetworkFromFile(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    
+    reader.onload = function(e) {
+        try {
+            const loadedNetwork = JSON.parse(e.target.result);
+            
+            // Валидация структуры данных
+            if (loadedNetwork.positions !== undefined && 
+                loadedNetwork.transitions !== undefined && 
+                loadedNetwork.arcs !== undefined) {
+                
+                // Загружаем сеть
+                network = loadedNetwork;
+                
+                // Обновляем nextArcId для генерации уникальных ID
+                let maxArcId = 1;
+                for (const arcId in network.arcs) {
+                    const numId = parseInt(arcId.replace('a', ''));
+                    if (!isNaN(numId) && numId >= maxArcId) {
+                        maxArcId = numId + 1;
+                    }
+                }
+                nextArcId = maxArcId;
+                
+                // Сбрасываем выбраный элемент
+                selectedElement = null;
+                selectedElementType = null;
+                
+                // Перерисовываем
+                render();
+                
+                // Очистка поля ввода для возможности повторной загрузки того же файла
+                event.target.value = '';
+                
+            } else {
+                throw new Error('Некорректный формат файла');
+            }
+        } catch (error) {
+            console.error('Ошибка при загрузке сети:', error);
+            alert('Не удалось загрузить файл. Проверьте формат файла.');
+            event.target.value = ''; // Очистка в случае ошибки
+        }
+    };
+    
+    reader.onerror = function() {
+        alert('Ошибка при чтении файла');
+        event.target.value = '';
+    };
+    
+    reader.readAsText(file);
+    render();
+}
 
 function setupPropertyListeners() {
     document.getElementById('token-count').addEventListener('change', () => {
@@ -820,8 +987,184 @@ function newNetwork() {
     render();
 }
 
+function loadExampleNetwork(exampleId) {
+    let exampleNetwork = null;
+    
+    switch (exampleId) {
+        case 'producer-consumer':
+            exampleNetwork = {
+                positions: {
+                    'p1': { id: 'p1', x: 200, y: 150, name: 'Буфер пуст', tokens: 1 },
+                    'p2': { id: 'p2', x: 400, y: 150, name: 'Буфер полон', tokens: 0 }
+                },
+                transitions: [
+                    { id: 't1', x: 300, y: 100, name: 'Производить', input: [], output: ['a1'], guard: '', delay: 0 },
+                    { id: 't2', x: 300, y: 200, name: 'Потреблять', input: [], output: ['a2'], guard: '', delay: 0 }
+                ],
+                arcs: {
+                    'a1': { id: 'a1', positionId: 'p1', weight: 1, isInhibitor: false },
+                    'a2': { id: 'a2', positionId: 'p2', weight: 1, isInhibitor: false }
+                }
+            };
+            // Настройка связей дуг
+            exampleNetwork.transitions[0].input = ['a3'];
+            exampleNetwork.transitions[1].input = ['a4'];
+            exampleNetwork.arcs['a3'] = { id: 'a3', positionId: 'p2', weight: 1, isInhibitor: false };
+            exampleNetwork.arcs['a4'] = { id: 'a4', positionId: 'p1', weight: 1, isInhibitor: false };
+            break;
+            
+        case 'fork-join':
+            exampleNetwork = {
+                positions: {
+                    'p1': { id: 'p1', x: 150, y: 200, name: 'P1', tokens: 1 },
+                    'p2': { id: 'p2', x: 300, y: 100, name: 'P2', tokens: 0 },
+                    'p3': { id: 'p3', x: 300, y: 300, name: 'P3', tokens: 0 },
+                    'p4': { id: 'p4', x: 450, y: 200, name: 'P4', tokens: 0 }
+                },
+                transitions: [
+                    { id: 't1', x: 225, y: 200, name: 'Fork', input: ['a1'], output: ['a2', 'a3'], guard: '', delay: 0 },
+                    { id: 't2', x: 375, y: 200, name: 'Join', input: ['a4', 'a5'], output: ['a6'], guard: '', delay: 0 }
+                ],
+                arcs: {
+                    'a1': { id: 'a1', positionId: 'p1', weight: 1, isInhibitor: false },
+                    'a2': { id: 'a2', positionId: 'p2', weight: 1, isInhibitor: false },
+                    'a3': { id: 'a3', positionId: 'p3', weight: 1, isInhibitor: false },
+                    'a4': { id: 'a4', positionId: 'p2', weight: 1, isInhibitor: false },
+                    'a5': { id: 'a5', positionId: 'p3', weight: 1, isInhibitor: false },
+                    'a6': { id: 'a6', positionId: 'p4', weight: 1, isInhibitor: false }
+                }
+            };
+            break;
+            
+        case 'inhibitor':
+            exampleNetwork = {
+                positions: {
+                    'p1': { id: 'p1', x: 150, y: 200, name: 'P1', tokens: 1 },
+                    'p2': { id: 'p2', x: 300, y: 150, name: 'P2', tokens: 0 },
+                    'p3': { id: 'p3', x: 450, y: 200, name: 'P3', tokens: 0 }
+                },
+                transitions: [
+                    { id: 't1', x: 225, y: 150, name: 'T1', input: ['a1'], output: ['a2'], guard: '', delay: 0 },
+                    { id: 't2', x: 375, y: 200, name: 'T2', input: ['a3', 'a4'], output: ['a5'], guard: '', delay: 0 }
+                ],
+                arcs: {
+                    'a1': { id: 'a1', positionId: 'p1', weight: 1, isInhibitor: false },
+                    'a2': { id: 'a2', positionId: 'p2', weight: 1, isInhibitor: false },
+                    'a3': { id: 'a3', positionId: 'p1', weight: 1, isInhibitor: false },
+                    'a4': { id: 'a4', positionId: 'p2', weight: 1, isInhibitor: true }, // ингибиторная дуга
+                    'a5': { id: 'a5', positionId: 'p3', weight: 1, isInhibitor: false }
+                }
+            };
+            break;
+            
+        default:
+            return;
+    }
+    
+    // Загружаем сеть
+    network = exampleNetwork;
+    
+    // Обновляем nextArcId
+    let maxArcId = 1;
+    for (const arcId in network.arcs) {
+        const numId = parseInt(arcId.replace('a', ''));
+        if (!isNaN(numId) && numId >= maxArcId) {
+            maxArcId = numId + 1;
+        }
+    }
+    nextArcId = maxArcId;
+    
+    // Сбрасываем выбраный элемент
+    selectedElement = null;
+    selectedElementType = null;
+    
+    // Перерисовываем
+    render();
+}
+
 function showExamples() {
-    alert("Примеры доступны в полной версии на study.aia.expert");
+    // Создаем выпадающее меню с примерами
+    const examplesMenu = document.getElementById('examples-menu');
+    if (examplesMenu) {
+        examplesMenu.style.display = 'block';
+        return;
+    }
+    
+    // Создаем меню, если его нет
+    const menu = document.createElement('div');
+    menu.id = 'examples-menu';
+    menu.style.position = 'absolute';
+    menu.style.top = '70px';
+    menu.style.right = '550px';
+    menu.style.backgroundColor = document.body.classList.contains('dark-theme') ? '#333' : '#fff';
+    menu.style.border = '1px solid #ccc';
+    menu.style.borderRadius = '4px';
+    menu.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+    menu.style.zIndex = '1000';
+    menu.style.padding = '10px';
+    menu.style.minWidth = '200px';
+    
+    const title = document.createElement('div');
+    title.textContent = 'Примеры сетей Петри';
+    title.style.fontWeight = 'bold';
+    title.style.marginBottom = '10px';
+    title.style.color = document.body.classList.contains('dark-theme') ? '#ddd' : '#000';
+    menu.appendChild(title);
+    
+    const examples = [
+        { id: 'producer-consumer', name: 'Производитель-потребитель' },
+        { id: 'fork-join', name: 'Fork-Join' },
+        { id: 'inhibitor', name: 'С ингибиторными дугами' }
+    ];
+    
+    examples.forEach(example => {
+        const button = document.createElement('button');
+        button.textContent = example.name;
+        button.style.display = 'block';
+        button.style.width = '100%';
+        button.style.padding = '8px';
+        button.style.margin = '4px 0';
+        button.style.border = '1px solid #ccc';
+        button.style.borderRadius = '4px';
+        button.style.background = document.body.classList.contains('dark-theme') ? '#444' : '#f8f8f8';
+        button.style.color = document.body.classList.contains('dark-theme') ? '#ddd' : '#000';
+        button.style.cursor = 'pointer';
+        
+        button.onmouseover = () => {
+            button.style.background = document.body.classList.contains('dark-theme') ? '#555' : '#e8e8e8';
+        };
+        
+        button.onmouseout = () => {
+            button.style.background = document.body.classList.contains('dark-theme') ? '#444' : '#f8f8f8';
+        };
+        
+        button.onclick = () => {
+            loadExampleNetwork(example.id);
+            document.getElementById('examples-menu').style.display = 'none';
+        };
+        
+        menu.appendChild(button);
+    });
+    
+    // Кнопка закрытия
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = 'Закрыть';
+    closeBtn.style.display = 'block';
+    closeBtn.style.width = '100%';
+    closeBtn.style.padding = '8px';
+    closeBtn.style.marginTop = '10px';
+    closeBtn.style.border = '1px solid #ccc';
+    closeBtn.style.borderRadius = '4px';
+    closeBtn.style.background = document.body.classList.contains('dark-theme') ? '#444' : '#f8f8f8';
+    closeBtn.style.color = document.body.classList.contains('dark-theme') ? '#ddd' : '#000';
+    closeBtn.style.cursor = 'pointer';
+    
+    closeBtn.onclick = () => {
+        menu.style.display = 'none';
+    };
+    
+    menu.appendChild(closeBtn);
+    document.body.appendChild(menu);
 }
 
 function saveNetwork() {
@@ -841,6 +1184,16 @@ function saveNetwork() {
         alert('Не удалось сохранить файл');
     }
 }
+
+function showExamples() {
+    document.getElementById('examples-modal').style.display = 'flex';
+}
+
+function closeExamplesModal() {
+    document.getElementById('examples-modal').style.display = 'none';
+}
+
+
 
 //---------------------------------------------------- Simulator --------------------------------------------------------
 
