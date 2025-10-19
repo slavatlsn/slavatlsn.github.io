@@ -1,0 +1,208 @@
+:root {
+    /* Цвета для светлой темы */
+    --primary-color: #4361ee;
+    --primary-hover: #3a56d4;
+    --secondary-color: #5667f9;
+    --secondary-hover: #4361ee;
+    --background-color: #f9fafb;
+    --background-secondary: #ffffff;
+    --text-primary: #1f2937;
+    --text-secondary: #4b5563;
+    --text-light: #ffffff;
+    --border-color: #e5e7eb;
+    --border-light: #d1d5db;
+    --shadow-color: rgba(0, 0, 0, 0.05);
+    --panel-background: #f3f4f6;
+    --accent-color: #7209b7;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --error-color: #ef4444;
+    
+    /* Размеры */
+    --header-height: 60px;
+    --footer-height: 50px;
+    --sidebar-width: 25%;
+    --button-padding: 8px 14px;
+    --spacing-sm: 10px;
+    --spacing-md: 15px;
+    --spacing-lg: 20px;
+    --radius-default: 6px;
+    --radius-circle: 50%;
+    --transition-speed: 0.2s;
+    --transition-function: ease;
+    
+    /* Шрифты */
+    --font-family: 'Roboto', sans-serif;
+    --font-size-xs: 0.75rem;
+    --font-size-sm: 0.85rem;
+    --font-size-md: 0.9rem;
+    --font-size-lg: 0.95rem;
+    --font-size-xl: 1.1rem;
+    --font-size-xxl: 1.25rem;
+    --font-size-heading: 1.4rem;
+    --line-height: 1.6;
+    
+    /* Темная тема - значения по умолчанию (светлая) */
+    --bg-primary: var(--background-color);
+    --bg-secondary: var(--background-secondary);
+    --text-primary-dark: var(--text-primary);
+    --text-secondary-dark: var(--text-secondary);
+    --border-primary: var(--border-color);
+    --panel-bg: var(--panel-background);
+    --canvas-bg: var(--background-color);
+    --canvas-grid: #e5e7eb;
+    --element-stroke: #6b7280;
+    --arc-color: #6b7280;
+    --arc-inhibitor: #f43f5e;
+    --token-color: #1f2937;
+    --arc-weight: #1f2937;
+}
+
+/* Темная тема */
+body.dark-theme {
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --text-primary-dark: #f3f4f6;
+    --text-secondary-dark: #cbd5e1;
+    --border-primary: #334155;
+    --panel-bg: #1e293b;
+    --canvas-bg: #0f172a;
+    --canvas-grid: #1e293b;
+    --element-stroke: #94a3b8;
+    --arc-color: #94a3b8;
+    --arc-inhibitor: #f87171;
+    --token-color: #f3f4f6;
+    --arc-weight: #f3f4f6;
+}
+
+/* help.css */
+* {
+    box-sizing: border-box;
+}
+
+html {
+    height: 100%;
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh; /* Важно: не height, а min-height */
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-family);
+    background-color: var(--bg-primary);
+    color: var(--text-primary-dark);
+    overflow-x: hidden;
+}
+
+/* Прилипающий заголовок */
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding: 0 var(--spacing-lg);
+    height: var(--header-height);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-primary);
+    box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+header h2 {
+    margin: 0;
+    font-size: var(--font-size-lg);
+    color: var(--text-primary-dark);
+}
+
+main {
+    flex: 1;
+    padding: var(--spacing-lg) 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.help-content {
+    max-width: 900px;
+    width: 95%;
+    padding: 32px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-default);
+    box-shadow: 0 4px 24px var(--shadow-color);
+    line-height: var(--line-height);
+    color: var(--text-primary-dark);
+}
+
+.help-content h1,
+.help-content h2,
+.help-content h3 {
+    color: var(--primary-color);
+    margin-top: 0;
+    font-size: var(--font-size-heading);
+}
+
+.help-content h2 {
+    margin: 32px 0 16px 0;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--border-primary);
+}
+
+.help-content ul {
+    margin: 16px 0;
+    padding-left: 32px;
+}
+
+.help-content li {
+    margin-bottom: 12px;
+    font-size: var(--font-size-md);
+}
+
+.help-content p {
+    margin: 16px 0;
+    font-size: var(--font-size-md);
+}
+
+.back-button {
+    display: inline-block;
+    margin: 24px 0;
+    padding: 14px 28px;
+    background: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: var(--radius-default);
+    font-weight: 500;
+    transition: background var(--transition-speed) var(--transition-function);
+    font-size: var(--font-size-md);
+    border: none;
+    cursor: pointer;
+}
+
+.back-button:hover {
+    background: var(--primary-hover);
+}
+
+footer {
+    padding: 20px 0;
+    text-align: center;
+    background: var(--panel-bg);
+    border-top: 1px solid var(--border-primary);
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary-dark);
+}
+
+footer p {
+    margin: 8px 0;
+}
+
+footer a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}

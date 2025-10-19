@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ru" prefix="og: https://ogp.me/ns#">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Интерактивный симулятор сетей Петри — часть лабораторных работ по дисциплине «Автоматы» в НИЯУ МИФИ">
+    <meta name="author" content="Кафедра №22 «Кибернетика», НИЯУ МИФИ">
+    <meta name="generator" content="PetriSimulator v1.0">
+
+    <!-- SEO -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Симулятор сетей Петри | МИФИ">
+    <meta property="og:url" content="https://study.aia.expert/petri-simulator"> <!-- эта ссылка не работает -->
+    <meta property="og:site_name" content="Учебный центр МИФИ">
+
+    <title>Сети Петри | Симулятор</title>
+    
+    <link rel="stylesheet" href="./static/css/style.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">  
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h2>Интерактивный симулятор сетей Петри</h2>
+        <div class="header-controls">
+            <button class="btn" id="new-network-btn">Новая сеть</button>
+            <button class="btn" id="load-example-btn">Примеры</button>
+            <button class="btn" id="save-btn">Сохранить</button>
+            <button class="btn" id="load-network-btn">Загрузить
+                <input type="file" id="load-network-input" accept=".json" style="display: none;">
+            </button>
+            <a href="info.html" class="back-button">
+                <button class="btn-secondary" id="help-btn">Справка</button>
+            </a>
+        </div>
+        <button class="theme-toggle" id="theme-toggle" title="Переключить тему">☀️</button>
+    </header>
+
+    <main>
+        <!-- Модальное окно для примеров -->
+<div id="examples-modal" class="modal">
+    <div class="modal-content">
+        <h3>Выберите пример сети</h3>
+        
+        <button onclick="loadExample('producer-consumer')" class="example-btn">
+            🏭 Производитель-Потребитель
+        </button>
+        
+        <button onclick="loadExample('fork-join')" class="example-btn">
+            ➿ Fork-Join (Расщепление-Объединение)
+        </button>
+        
+        <button onclick="loadExample('inhibitor')" class="example-btn">
+            ⛔ С ингибиторными дугами
+        </button>
+        
+        <button onclick="closeExamplesModal()" class="close-modal-btn">
+            Закрыть
+        </button>
+    </div>
+</div>
+        <aside class="sidebar" role="complementary">
+            <section class="toolbar">
+                <h2>Инструменты</h2>
+                <div class="tool-buttons">
+                    <div class="tool-button" data-tool="position" aria-pressed="true">
+                        <h2>📍</h2>
+                        <span>Позиция</span>
+                    </div>
+                    <div class="tool-button" data-tool="transition" aria-pressed="false">
+                        <h2>🔄</h2>
+                        <span>Переход</span>
+                    </div>
+                    <div class="tool-button" data-tool="arc" aria-pressed="false">
+                        <h2>🔗</h2>
+                        <span>Дуга</span>
+                    </div>
+                    <div class="tool-button" data-tool="token" aria-pressed="false">
+                        <h2>🔘</h2>
+                        <span>Фишка</span>
+                    </div>
+                    <div class="tool-button" data-tool="move" aria-pressed="false">
+                        <h2>↔️</h2>
+                        <span>Перемещение</span>
+                    </div>
+                    <div class="tool-button" data-tool="delete" aria-pressed="false">
+                        <h2>🗑️</h2>
+                        <span>Удалить</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="properties" id="properties-panel">
+                <h2>Свойства</h2>
+
+                <div class="property-group" id="position-properties" style="display: none;">
+                    <h3>Позиция</h3>
+                    <div class="property">
+                        <label for="position-name">Имя</label>
+                        <input type="text" id="position-name" value="P1">
+                    </div>
+                    <div class="property">
+                        <label for="token-count">Количество фишек</label>
+                        <input type="number" id="token-count" value="1" min="0">
+                    </div>
+                    <div class="property">
+                        <label for="position-type">Тип фишки</label>
+                        <select id="position-type">
+                            <option value="default">По умолчанию</option>
+                            <option value="red">Объектный</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="property-group" id="transition-properties" style="display: none;">
+                    <h3>Переход</h3>
+                    <div class="property">
+                        <label for="transition-name">Имя</label>
+                        <input type="text" id="transition-name" value="T1">
+                    </div>
+                    <div class="property">
+                        <label for="guard-condition">Guard-условие</label>
+                        <input type="text" id="guard-condition" placeholder="x > 0">
+                    </div>
+                    <div class="property">
+                        <label for="transition-delay">Задержка (мс)</label>
+                        <input type="number" id="transition-delay" value="0" min="0">
+                    </div>
+                </div>
+
+                <div class="property-group" id="arc-properties" style="display: none;">
+                    <h3>Дуга</h3>
+                    <div class="property">
+                        <label for="arc-weight">Вес дуги</label>
+                        <input type="number" id="arc-weight" value="1" min="1">
+                        <label for="arc-type" style="margin-top: 10px">Тип дуги</label>
+                        <select id="arc-type">
+                            <option value="default">По умолчанию</option>
+                            <option value="red">Ингибитор</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="property-group" id="default-properties" style="display: block;">
+                    <p>Выберите элемент на холсте, чтобы настроить его свойства.</p>
+                </div>
+            </section>
+        </aside>
+
+        <section class="workspace" role="main">
+            <div class="workspace-header">
+                <div class="workspace-title">Новая сеть</div>
+                <div class="simulation-controls">
+                    <button class="btn" id="reset-btn">↻ Сброс</button>
+                    <button class="btn" id="step-btn">➡ Шаг</button>
+                    <button class="btn" id="play-btn">⏵ Пуск</button>
+                    <button class="btn" id="analyze-btn">🔍 Анализ</button>
+                </div>
+            </div>
+
+            <div class="canvas-container">
+                <canvas id="petri-net-canvas"></canvas>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Учебный центр НИЯУ МИФИ программы <em>«Искусственный интеллект и моделирование когнитивных процессов»</em></p>
+        <p>Кафедра №22 «Кибернетика» | Москва, 2025 г. |
+           <a href="https://study.aia.expert/" target="_blank">study.aia.expert</a>
+        </p>
+    </footer>
+
+    <!-- Прямая ссылка на JS файл в папке static -->
+    <script src="./static/js/script.js"></script>
+</body>
+</html>
