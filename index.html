@@ -1,215 +1,314 @@
 <!DOCTYPE html>
-<html lang="ru" prefix="og: https://ogp.me/ns#">
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- SEO и метаданные -->
-    <meta name="description" content="Интерактивный симулятор сетей Петри — часть лабораторных работ по дисциплине «Автоматы» в НИЯУ МИФИ">
-    <meta name="author" content="Кафедра №22 «Кибернетика», НИЯУ МИФИ">
-    <meta name="generator" content="PetriSimulator v1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-    <!-- Open Graph метатеги для социальных сетей -->
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Симулятор сетей Петри | МИФИ">
-    <meta property="og:url" content="https://study.aia.expert/petri-simulator">
-    <meta property="og:site_name" content="Учебный центр МИФИ">
+  <title>Выбор визуализатора</title>
 
-    <title>Сети Петри | Симулятор</title>
-    
-    <link rel="stylesheet" href="./static/css/style.css">
-    <link rel="icon" href="favicon.ico" type="image/x-icon">  
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 40px;
+      min-height: 100vh;
+
+      background: #0f172a;
+
+      color: #f8fafc;
+
+      font-family: Arial, sans-serif;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    .title {
+      text-align: center;
+      margin-bottom: 20px;
+
+      font-size: 48px;
+      font-weight: bold;
+    }
+
+    .subtitle {
+      text-align: center;
+      margin-bottom: 50px;
+
+      color: #cbd5e1;
+
+      font-size: 20px;
+      line-height: 1.6;
+    }
+
+    .cards {
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(auto-fit, minmax(320px, 1fr));
+
+      gap: 30px;
+    }
+
+    .card {
+
+      background: #1e293b;
+
+      border-radius: 20px;
+
+      padding: 30px;
+
+      transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+
+      border: 1px solid #334155;
+    }
+
+    .card:hover {
+
+      transform: translateY(-8px);
+
+      box-shadow:
+        0 10px 30px rgba(0,0,0,0.4);
+    }
+
+    .card-title {
+
+      font-size: 32px;
+
+      margin-bottom: 20px;
+
+      color: #60a5fa;
+    }
+
+    .card-description {
+
+      color: #cbd5e1;
+
+      line-height: 1.7;
+
+      margin-bottom: 30px;
+    }
+
+    .features {
+
+      margin-bottom: 30px;
+    }
+
+    .feature {
+
+      margin-bottom: 12px;
+
+      color: #e2e8f0;
+    }
+
+    .open-button {
+
+      display: inline-block;
+
+      text-decoration: none;
+
+      padding: 14px 24px;
+
+      background: #2563eb;
+
+      color: white;
+
+      border-radius: 10px;
+
+      font-weight: bold;
+
+      transition: background 0.2s ease;
+    }
+
+    .open-button:hover {
+      background: #1d4ed8;
+    }
+
+    .footer {
+
+      margin-top: 60px;
+
+      text-align: center;
+
+      color: #94a3b8;
+
+      line-height: 1.8;
+    }
+
+    .highlight {
+      color: #22c55e;
+      font-weight: bold;
+    }
+
+  </style>
+
 </head>
+
 <body>
-    <!-- Верхняя панель управления -->
-    <header>
-        <h2>Интерактивный симулятор сетей Петри</h2>
-        
-        <div class="header-controls">
-            <button class="btn" id="new-network-btn">Новая сеть</button>
-            <button class="btn" id="load-example-btn">Примеры</button>
-            <button class="btn" id="save-btn">Сохранить</button>
-            <button class="btn" id="load-network-btn">Загрузить
-                <input type="file" id="load-network-input" accept=".json" style="display: none;">
-            </button>
-            
-            <a href="info.html" class="back-button">
-                <button class="btn-secondary" id="help-btn">Справка</button>
-            </a>
-        </div>
-        
-        <!-- Переключатель темы -->
-        <button class="theme-toggle" id="theme-toggle" title="Переключить тему">☀️</button>
-    </header>
 
-    <main>
-        <!-- Боковая панель -->
-        <aside class="sidebar" role="complementary">
-            <!-- Панель инструментов для создания элементов сети -->
-            <section class="toolbar">
-                <h2>Инструменты</h2>
-                <div class="tool-buttons">
-                    <div class="tool-button" data-tool="position" aria-pressed="true">
-                        <h2>📍</h2>
-                        <span>Позиция</span>
-                    </div>
-                    <div class="tool-button" data-tool="transition" aria-pressed="false">
-                        <h2>🔄</h2>
-                        <span>Переход</span>
-                    </div>
-                    <div class="tool-button" data-tool="arc" aria-pressed="false">
-                        <h2>🔗</h2>
-                        <span>Дуга</span>
-                    </div>
-                    <div class="tool-button" data-tool="token" aria-pressed="false">
-                        <h2>🔘</h2>
-                        <span>Фишка</span>
-                    </div>
-                    <div class="tool-button" data-tool="move" aria-pressed="false">
-                        <h2>↔️</h2>
-                        <span>Перемещение</span>
-                    </div>
-                    <div class="tool-button" data-tool="delete" aria-pressed="false">
-                        <h2>🗑️</h2>
-                        <span>Удалить</span>
-                    </div>
-                </div>
-            </section>
+  <div class="container">
 
-            <!-- Панель свойств выбранного элемента -->
-            <section class="properties" id="properties-panel">
-                <h2>Свойства</h2>
-
-                <!-- Свойства для позиции -->
-                <div class="property-group" id="position-properties" style="display: none;">
-                    <h3>Позиция</h3>
-                    <div class="property">
-                        <label for="position-name">Имя</label>
-                        <input type="text" id="position-name" value="P1">
-                    </div>
-                    <div class="property">
-                        <label for="token-count">Количество фишек</label>
-                        <input type="number" id="token-count" value="1" min="0">
-                    </div>
-                    <div class="property">
-                        <label for="position-type">Тип фишки</label>
-                        <select id="position-type">
-                            <option value="default">По умолчанию</option>
-                            <option value="red">Объектный</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Свойства для перехода -->
-                <div class="property-group" id="transition-properties" style="display: none;">
-                    <h3>Переход</h3>
-                    <div class="property">
-                        <label for="transition-name">Имя</label>
-                        <input type="text" id="transition-name" value="T1">
-                    </div>
-                    <div class="property">
-                        <label for="guard-condition">Guard-условие</label>
-                        <input type="text" id="guard-condition" placeholder="x > 0">
-                    </div>
-                    <div class="property">
-                        <label for="transition-delay">Задержка (мс)</label>
-                        <input type="number" id="transition-delay" value="0" min="0">
-                    </div>
-                </div>
-
-                <!-- Свойства для дуги -->
-                <div class="property-group" id="arc-properties" style="display: none;">
-                    <h3>Дуга</h3>
-                    <div class="property">
-                        <label for="arc-weight">Вес дуги</label>
-                        <input type="number" id="arc-weight" value="1" min="1">
-                        <label for="arc-type" style="margin-top: 10px">Тип дуги</label>
-                        <select id="arc-type">
-                            <option value="default">По умолчанию</option>
-                            <option value="red">Ингибитор</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Сообщение по умолчанию -->
-                <div class="property-group" id="default-properties" style="display: block;">
-                    <p>Выберите элемент на холсте, чтобы настроить его свойства.</p>
-                </div>
-            </section>
-        </aside>
-
-        <!-- Рабочая область -->
-        <section class="workspace" role="main">
-            <div class="workspace-header">
-                <!-- Управление симуляцией -->
-                <div class="simulation-controls">
-                    <button class="btn" id="reset-btn">↻ Сброс</button>
-                    <button class="btn" id="mark-save-btn">💾</button>
-                    <button class="btn" id="step-btn">➡ Шаг</button>
-                    <button class="btn" id="play-btn">⏵ Пуск</button>
-                    <div class="speed-control">
-                        <label for="speed-slider">Скорость: </label>
-                        <input type="range" id="speed-slider" min="1" max="20" value="5">
-                        <span id="speed-value">5x</span>
-                    </div>
-                </div>
-
-                <!-- Анализ сети -->
-                <div class="simulation-controls">
-                    <button class="btn" id="analyze-btn">🔍 Анализ</button>
-                </div>
-            </div>
-
-            <!-- Холст для рисования сети Петри -->
-            <div class="canvas-container">
-                <canvas id="petri-net-canvas"></canvas>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <p>Учебный центр НИЯУ МИФИ программы <em>«Искусственный интеллект и моделирование когнитивных процессов»</em></p>
-        <p>Кафедра №22 «Кибернетика» | Москва, 2025 г. |
-           <a href="https://study.aia.expert/" target="_blank">study.aia.expert</a>
-        </p>
-    </footer>
-
-    <script src="./static/js/script.js"></script>
-    
-    <!-- Модальное окно для отображения результатов анализа сети -->
-    <div id="analysis-modal" class="modal">
-        <div class="modal-content">
-            <h3>Результаты анализа сети Петри</h3>
-            <div id="analysis-results">
-                <p>Запуск анализа...</p>
-            </div>
-            <button onclick="closeAnalysisModal()" class="close-modal-btn">Закрыть</button>
-        </div>
+    <div class="title">
+      Algorithm Visualizers
     </div>
 
-    <!-- Модальное окно для выбора примеров сетей Петри -->
-    <div id="examples-modal" class="modal">
-        <div class="modal-content">
-            <h3>Выберите пример сети</h3>
-            
-            <button onclick="loadExample('producer-consumer')" class="example-btn">
-                🏭 Производитель-Потребитель
-            </button>
-            
-            <button onclick="loadExample('fork-join')" class="example-btn">
-                ➿ Fork-Join (Расщепление-Объединение)
-            </button>
-            
-            <button onclick="loadExample('inhibitor')" class="example-btn">
-                ⛔ С ингибиторными дугами
-            </button>
-            
-            <button onclick="closeExamplesModal()" class="close-modal-btn">
-                Закрыть
-            </button>
-        </div>
+    <div class="subtitle">
+
+      Интерактивные визуализаторы алгоритмов сжатия данных
+      и криптографии.
+
+      <br><br>
+
+      Проект демонстрирует:
+      <span class="highlight">
+        пошаговую визуализацию,
+      </span>
+
+      математические основы алгоритмов
+      и процессы кодирования данных.
+
     </div>
-    
+
+    <div class="cards">
+
+      <div class="card">
+
+        <div class="card-title">
+          LZ77 Visualizer
+        </div>
+
+        <div class="card-description">
+
+          Интерактивная визуализация алгоритма словарного
+          сжатия LZ77.
+
+          <br><br>
+
+          Демонстрирует:
+          sliding window,
+          поиск совпадений,
+          генерацию токенов
+          и процесс восстановления данных.
+
+        </div>
+
+        <div class="features">
+
+          <div class="feature">
+            ✅ Sliding Window Visualization
+          </div>
+
+          <div class="feature">
+            ✅ Match Detection
+          </div>
+
+          <div class="feature">
+            ✅ Step-by-Step Encoding
+          </div>
+
+          <div class="feature">
+            ✅ Compression Statistics
+          </div>
+
+          <div class="feature">
+            ✅ Token Visualization
+          </div>
+
+        </div>
+
+        <a
+          class="open-button"
+          href="./lz77/index.html"
+        >
+          Открыть LZ77
+        </a>
+
+      </div>
+
+      <div class="card">
+
+        <div class="card-title">
+          RSA Visualizer
+        </div>
+
+        <div class="card-description">
+
+          Интерактивная визуализация алгоритма RSA.
+
+          <br><br>
+
+          Демонстрирует:
+          генерацию ключей,
+          модульную арифметику,
+          шифрование,
+          дешифрование
+          и математические основы криптографии.
+
+        </div>
+
+        <div class="features">
+
+          <div class="feature">
+            ✅ RSA Key Generation
+          </div>
+
+          <div class="feature">
+            ✅ Euler Function
+          </div>
+
+          <div class="feature">
+            ✅ Modular Arithmetic
+          </div>
+
+          <div class="feature">
+            ✅ Encryption / Decryption
+          </div>
+
+          <div class="feature">
+            ✅ Step-by-Step RSA Process
+          </div>
+
+        </div>
+
+        <a
+          class="open-button"
+          href="./rsa/index.html"
+        >
+          Открыть RSA
+        </a>
+
+      </div>
+
+    </div>
+
+    <div class="footer">
+
+      Educational Interactive Visualizers
+
+      <br>
+
+      LZ77 Compression • RSA Cryptography
+
+      <br><br>
+
+      HTML • CSS • JavaScript
+
+    </div>
+
+  </div>
+
 </body>
 </html>
