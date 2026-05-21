@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RSA Visualizer</title>
+
+  <link rel="stylesheet" href="rsa_style.css" />
+</head>
+<body>
+
+  <div class="container">
+
+    <h1>Интерактивный визуализатор алгоритма RSA</h1>
+
+    <div class="panel">
+
+      <div class="row">
+
+        <label>
+          Простое число p
+          <input type="number" id="pInput" value="61" />
+        </label>
+
+        <label>
+          Простое число q
+          <input type="number" id="qInput" value="53" />
+        </label>
+
+      </div>
+
+      <label style="margin-top: 15px;">
+        Сообщение
+        <input type="number" id="messageInput" value="42" />
+      </label>
+
+      <div class="buttons">
+        <button id="generateBtn">
+          Запустить
+        </button>
+      </div>
+
+    </div>
+
+    <div class="panel">
+      <h2>Процесс работы</h2>
+      <div id="stepsContainer"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Данные ключей</h2>
+      <div id="keysInfo"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Результаты шифрования</h2>
+      <div id="encryptionInfo"></div>
+    </div>
+
+  </div>
+
+  <script src="rsa_math.js"></script>
+  <script src="rsa_rsa.js"></script>
+  <script src="rsa_visualization.js"></script>
+  <script src="rsa_script.js"></script>
+
+</body>
+</html>

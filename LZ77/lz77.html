@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LZ77 Visualizer</title>
+  <link rel="stylesheet" href="lz77_style.css" />
+</head>
+<body>
+
+  <div class="container">
+
+    <h1>Интерактивный визуализатор алгоритма LZ77</h1>
+
+    <div class="controls">
+
+      <label>
+        Входной текст
+        <textarea id="inputText">ABABCABABCABABC</textarea>
+      </label>
+
+      <div class="row">
+
+        <label>
+          Размер словаря
+          <input type="number" id="dictSize" value="8" min="1"/>
+        </label>
+
+        <label>
+          Размер буфера
+          <input type="number" id="bufferSize" value="4" min="1"/>
+        </label>
+
+      </div>
+
+      <div class="buttons">
+        <button id="encodeBtn">Сжать</button>
+        <button id="decodeBtn">Восстановить</button>
+      </div>
+
+    </div>
+
+    <div class="panel">
+      <h2>Процесс работы</h2>
+      <div id="windowView"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Сжатые данные</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Offset</th>
+            <th>Length</th>
+            <th>Next Char</th>
+          </tr>
+        </thead>
+
+        <tbody id="tokensBody"></tbody>
+      </table>
+    </div>
+
+    <div class="panel">
+      <h2>Восстановленные данные</h2>
+      <div id="decodedText"></div>
+      <div id="validation"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Расчет эффективности сжатия</h2>
+      <div id="stats"></div>
+    </div>
+
+  </div>
+
+  <script src="lz77_script.js"></script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 30px;
+  background: #0f172a;
+  color: #f8fafc;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  max-width: 1100px;
+  margin: auto;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.controls,
+.panel {
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+textarea {
+  width: 100%;
+  min-height: 120px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.row {
+  display: flex;
+  gap: 20px;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 10px;
+}
+
+.buttons {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  background: #1d4ed8;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: 1px solid #334155;
+  padding: 10px;
+  text-align: center;
+}
+
+th {
+  background: #334155;
+}
+
+#windowView {
+  font-family: monospace;
+  font-size: 20px;
+  word-break: break-all;
+  line-height: 1.8;
+}
+
+.regular {
+  background: #374151;
+  padding: 1px;
+}
+
+.dictionary {
+  background: #3B4101;
+  padding: 1px;
+}
+
+.buffer {
+  background: #2563eb;
+  padding: 1px;
+}
+
+.match {
+  background: #16a34a;
+  padding: 1px;
+}
+
+#decodedText,
+#validation,
+#stats {
+  margin-top: 10px;
+  font-size: 18px;
+}
