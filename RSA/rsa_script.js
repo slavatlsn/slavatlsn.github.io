@@ -17,8 +17,7 @@ generateBtn.addEventListener("click", () => {
       document.getElementById("messageInput").value
     );
 
-    const result =
-      generateRSA(p, q, message);
+    const result = generateRSA(p, q, message);
 
     renderSteps(result.steps);
 
