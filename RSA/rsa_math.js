@@ -55,7 +55,7 @@ function modInverse(e, phi) {
   const result = extendedGCD(e, phi);
 
   if (result.gcd !== 1n) {
-    throw new Error("Modular inverse does not exist");
+    throw new Error("Обратное по модулю не существует");
   }
 
   return ((result.x % phi) + phi) % phi;
