@@ -18,7 +18,12 @@ body {
 h1 {
   text-align: center;
   margin-bottom: 30px;
+  font-weight: 600;
 }
+
+/* =======================
+   ПАНЕЛИ
+======================= */
 
 .panel {
   background: #1e293b;
@@ -26,6 +31,10 @@ h1 {
   border-radius: 12px;
   margin-bottom: 20px;
 }
+
+/* =======================
+   INPUTS
+======================= */
 
 .row {
   display: flex;
@@ -36,13 +45,24 @@ label {
   display: flex;
   flex-direction: column;
   flex: 1;
+  font-size: 14px;
+  color: #cbd5e1;
 }
 
 input {
   margin-top: 10px;
   padding: 10px;
   font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  background: #0f172a;
+  color: #f8fafc;
+  outline: none;
 }
+
+/* =======================
+   BUTTON
+======================= */
 
 .buttons {
   margin-top: 20px;
@@ -58,37 +78,80 @@ button {
   font-size: 16px;
 }
 
-button:hover {
-  background: #1d4ed8;
-}
+/* =======================
+   STEPS
+======================= */
 
 .step {
-  background: #111827;
-  padding: 15px;
+  background: #0f172a;
+  padding: 16px;
   border-radius: 10px;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
+  border: 1px solid #1f2937;
 }
 
 .step-title {
   font-size: 18px;
   margin-bottom: 10px;
   color: #60a5fa;
+  font-weight: 600;
 }
 
 .math {
   font-family: monospace;
-  font-size: 20px;
-  margin-top: 10px;
+  font-size: 18px;
+  margin-top: 8px;
   color: #22c55e;
 }
 
 .explanation {
   margin-top: 10px;
   color: #cbd5e1;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
+/* =======================
+   RESULT
+======================= */
+
 .result {
-  font-size: 20px;
+  font-size: 18px;
   margin-top: 10px;
   color: #facc15;
+}
+
+/* =======================
+   EXTRA BOX (раскрытие)
+======================= */
+
+.extra-box {
+  margin-top: 12px;
+  padding: 12px;
+  background: #0b1220;
+  border-left: 3px solid #2563eb;
+  border-radius: 8px;
+  color: #cbd5e1;
+  font-size: 13px;
+  line-height: 1.6;
+  display: none;
+}
+
+.step.open .extra-box {
+  display: block;
+}
+
+/* =======================
+   MORE BUTTON
+======================= */
+
+.more-btn {
+  margin-top: 10px;
+  padding: 6px 10px;
+  font-size: 12px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  color: #cbd5e1;
+  border-radius: 6px;
+  cursor: pointer;
 }
