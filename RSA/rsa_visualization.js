@@ -1,29 +1,38 @@
 function renderSteps(steps) {
 
-  const container =
-    document.getElementById("stepsContainer");
-
+  const container = document.getElementById("stepsContainer");
   container.innerHTML = "";
 
   steps.forEach(step => {
 
     const div = document.createElement("div");
-
     div.className = "step";
 
     div.innerHTML = `
-      <div class="step-title">
-        ${step.title}
-      </div>
+      <div class="step-title">${step.title}</div>
 
-      <div class="math">
-        ${step.math}
-      </div>
+      <div class="math">${step.math}</div>
 
-      <div class="explanation">
-        ${step.explanation}
-      </div>
+      <div class="explanation">${step.explanation}</div>
     `;
+
+    // 👇 если есть extra → добавляем кнопку
+    if (step.extra) {
+
+      const btn = document.createElement("button");
+      btn.className = "more-btn";
+      btn.innerText = "Подробнее";
+
+      const extraDiv = document.createElement("div");
+      extraDiv.innerHTML = step.extra;
+
+      btn.addEventListener("click", () => {
+        div.classList.toggle("open");
+      });
+
+      div.appendChild(btn);
+      div.appendChild(extraDiv);
+    }
 
     container.appendChild(div);
   });
@@ -45,14 +54,14 @@ function renderKeys(result) {
   `;
 }
 
-function renderEncryption(result) {
+function renderEncryption(msg, result) {
 
   const encryptionInfo =
     document.getElementById("encryptionInfo");
 
   encryptionInfo.innerHTML = `
     <div class="result">
-      Исходное сообщение: ${result.decrypted}
+      Исходное сообщение: ${msg}
     </div>
 
     <div class="result">
