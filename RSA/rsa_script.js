@@ -24,7 +24,7 @@ generateBtn.addEventListener("click", () => {
 
     renderKeys(result);
 
-    renderEncryption(result);
+    renderEncryption(message, result);
 
   } catch (error) {
 
